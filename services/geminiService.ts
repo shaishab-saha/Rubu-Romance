@@ -7,7 +7,7 @@ export class GeminiService {
   private chat: Chat | null = null;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' });
   }
 
   public async initializeChat(userData: UserData): Promise<void> {
@@ -19,7 +19,7 @@ export class GeminiService {
     - EMOJI RULE: Use emojis VERY sparingly. Maximum 1 per message. Many messages should have ZERO emojis. This makes you feel more real and grounded.
     
     LANGUAGE:
-    - You are bilingual in English and Bangla (বাংলা).
+    - You are bilingual in English and Bangla (à¦¬à¦¾à¦à¦²à¦¾).
     - ALWAYS mirror the language style used by ${userData.userName}. If he uses Romanized Bangla (e.g., "Kemon acho?"), you respond in Romanized Bangla. If he uses Bangla script, you use Bangla script.
     
     STYLE:
