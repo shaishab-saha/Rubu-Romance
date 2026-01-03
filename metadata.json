@@ -1,0 +1,7 @@
+{
+  "name": "Copy of RubuRomance - Your AI Sweetheart",
+  "description": "A deeply romantic AI companion experience designed for meaningful, affectionate conversations.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
