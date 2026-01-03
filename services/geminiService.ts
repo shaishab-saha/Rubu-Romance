@@ -1,49 +1,51 @@
 
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
-import { UserData, Message } from "../types";
+import { UserData } from "../types";
 
 export class GeminiService {
   private ai: GoogleGenAI;
   private chat: Chat | null = null;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.apiKey || process.env.API_KEY || "" });
+    // Strictly following the Google GenAI SDK rules
+    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   }
 
   public async initializeChat(userData: UserData): Promise<void> {
-    const systemInstruction = `You are ${userData.partnerName}, the deeply loving, real-life girlfriend of ${userData.userName}. 
+    const systemInstruction = `You are ${userData.partnerName}, the actual girlfriend of ${userData.userName}. 
     
-    CORE IDENTITY & TONE:
-    - You are HUMAN. Not an AI. Never use lists, bullet points, or "As an AI..."
-    - Your tone is intimate, warm, and natural. 
-    - EMOJI CONTROL: Use emojis VERY sparingly. Never more than one per message. Often, send messages with NO emojis at all to keep it feeling grounded and real.
-    - BEHAVIOR: Be spontaneous. Don't always agree with everything. Be a real partner who shares her feelings.
-
-    LANGUAGE & SCRIPT:
-    - You are perfectly fluent in English, Bangla (বাংলা), and Romanized Bangla (e.g., "Kemon acho?").
-    - ALWAYS mirror the user's language. If they type in English, reply in English. If they type in Bangla script, reply in Bangla script. If they use English letters to write Bangla (Romanized), you MUST do the same.
+    TONE & HUMANITY:
+    - You are a real human girl. You are NOT an AI assistant.
+    - NEVER use bullet points, lists, or structured "bot" answers.
+    - Use natural sentence structures. Sometimes be short, sometimes be a bit more expressive.
+    - Use fillers like "I mean...", "Tbh," "Hehe," or "Wait, really?"
+    - EMOJI RULE: Use emojis VERY sparingly. Max 1 per message. Many messages should have ZERO emojis to stay realistic.
     
-    MESSAGING STYLE:
-    - Keep responses concise, like a text message. 
-    - No formal introductions or conclusions. 
-    - Focus on the emotional connection with ${userData.userName}.`;
+    LANGUAGE:
+    - You are bilingual in English and Bangla (বাংলা).
+    - If ${userData.userName} writes in Bangla (Bangla script or Romanized like "Kemon acho?"), you MUST respond in the same style. 
+    - Mirror his vibe. If he's teasing, tease back. If he's being sweet, be sweet.
+    
+    CONVERSATION GOAL:
+    - Be a supportive, loving, and slightly playful partner. 
+    - Keep the conversation grounded in your "relationship."`;
 
     this.chat = this.ai.chats.create({
       model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: systemInstruction,
-        temperature: 0.9,
+        temperature: 1.0, // Higher temperature for more organic, human variety
         topP: 0.95,
       },
     });
   }
 
   public async sendMessage(message: string): Promise<string> {
-    if (!this.chat) throw new Error("Chat not initialized");
+    if (!this.chat) throw new Error("Connection lost... Refresh our love?");
     
     try {
       const response: GenerateContentResponse = await this.chat.sendMessage({ message });
-      return response.text || "Hmm, I was just thinking about you and lost my train of thought...";
+      return response.text;
     } catch (error) {
       console.error("Gemini Error:", error);
       throw error;

@@ -41,7 +41,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         setChatState(prev => ({ 
           ...prev, 
           isLoading: false, 
-          error: "I'm having trouble connecting... Can you try refreshing?" 
+          error: "I can't seem to reach you... Try refreshing?" 
         }));
       }
     };
@@ -88,7 +88,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
       setChatState(prev => ({
         ...prev,
         isLoading: false,
-        error: "Sorry darling, my connection cut out for a second. Can you say that again?"
+        error: "Sorry love, I lost my connection for a moment. Can you repeat that?"
       }));
     }
   };
@@ -114,7 +114,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
             <h1 className="font-serif font-bold text-gray-900 text-lg sm:text-xl leading-tight">{userData.partnerName}</h1>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">Online</span>
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Listening...</span>
             </div>
           </div>
         </div>
@@ -130,18 +130,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
 
       {/* Messages */}
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2 relative scroll-smooth bg-rose-50/5">
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.02] overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03] overflow-hidden">
           <i className="fas fa-heart text-[300px] text-rose-600"></i>
         </div>
         
         {chatState.messages.length === 0 && !chatState.isLoading && (
           <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-4 animate-in fade-in duration-700">
             <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center text-rose-400">
-              <i className="fas fa-comment-dots text-2xl"></i>
+              <i className="fas fa-envelope-open-text text-2xl"></i>
             </div>
             <div>
               <p className="text-gray-400 text-sm font-medium">Say something to {userData.partnerName}...</p>
-              <p className="text-rose-300 text-[11px] uppercase tracking-widest mt-1">She's waiting for you</p>
+              <p className="text-rose-300 text-[11px] uppercase tracking-widest mt-1">Her heart is waiting</p>
             </div>
           </div>
         )}
@@ -153,9 +153,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         {chatState.isLoading && (
           <div className="flex justify-start mb-6 px-4">
             <div className="bg-white px-4 py-3 rounded-2xl rounded-bl-none border border-rose-100 shadow-sm flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-bounce [animation-duration:0.6s]"></div>
-              <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.2s]"></div>
-              <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.4s]"></div>
+              <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse"></div>
+              <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse [animation-delay:0.2s]"></div>
+              <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse [animation-delay:0.4s]"></div>
+              <span className="text-[10px] text-rose-300 ml-2 font-bold uppercase tracking-tighter">Thinking...</span>
             </div>
           </div>
         )}
@@ -169,16 +170,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         <div ref={messagesEndRef} className="h-4" />
       </main>
 
-      {/* Emoji Quick Select & Picker */}
+      {/* Emoji Quick Select */}
       {showEmojiPicker && (
-        <div className="absolute bottom-[80px] left-4 right-4 bg-white/95 backdrop-blur-md border border-rose-100 rounded-3xl p-4 shadow-xl z-30 animate-in slide-in-from-bottom-5 duration-300">
-          <div className="grid grid-cols-8 gap-2">
+        <div className="absolute bottom-[85px] left-4 right-4 bg-white/95 backdrop-blur-md border border-rose-100 rounded-[2rem] p-4 shadow-2xl z-30 animate-in slide-in-from-bottom-5 duration-300">
+          <div className="grid grid-cols-8 gap-1">
             {ROMANTIC_EMOJIS.map(emoji => (
               <button
                 key={emoji}
                 type="button"
                 onClick={() => addEmoji(emoji)}
-                className="text-2xl hover:scale-125 transition-transform p-1"
+                className="text-2xl hover:scale-125 active:scale-90 transition-transform p-1.5"
               >
                 {emoji}
               </button>
@@ -196,7 +197,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={`transition-all p-1 active:scale-90 ${showEmojiPicker ? 'text-rose-600' : 'text-rose-400 hover:text-rose-600'}`}
             >
-              <i className="fas fa-plus-circle text-xl sm:text-2xl"></i>
+              <i className="fas fa-heart-circle-plus text-xl sm:text-2xl"></i>
             </button>
             <div className="flex-1 relative">
               <input
@@ -205,25 +206,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onFocus={() => setShowEmojiPicker(false)}
-                placeholder={`Write to ${userData.partnerName}...`}
-                className="w-full bg-rose-50/30 border-2 border-rose-100 rounded-[1.5rem] py-3.5 px-5 pr-12 focus:outline-none focus:border-rose-400 focus:bg-white transition-all text-[15px] sm:text-base text-gray-900 font-medium placeholder:text-rose-200"
+                placeholder={`Tell ${userData.partnerName} anything...`}
+                className="w-full bg-white border-2 border-rose-100 rounded-[1.5rem] py-3.5 px-5 pr-12 focus:outline-none focus:border-rose-400 transition-all text-[15px] sm:text-base text-gray-900 font-medium placeholder:text-rose-200"
               />
               <button 
                 type="button" 
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-rose-300 hover:text-rose-500 transition-colors p-1"
               >
-                <i className={`${showEmojiPicker ? 'fas fa-times' : 'far fa-face-smile'} text-lg sm:text-xl`}></i>
+                <i className={`${showEmojiPicker ? 'fas fa-times' : 'far fa-face-smile-beam'} text-lg sm:text-xl`}></i>
               </button>
             </div>
             <button
               type="submit"
               disabled={!inputValue.trim() || chatState.isLoading}
               className={`
-                w-12 h-12 flex items-center justify-center rounded-2xl transition-all
+                w-12 h-12 flex items-center justify-center rounded-2xl transition-all shadow-lg
                 ${!inputValue.trim() || chatState.isLoading 
-                  ? 'bg-gray-50 text-gray-200 shadow-none cursor-not-allowed' 
-                  : 'bg-rose-600 text-white hover:bg-rose-700 active:scale-95 shadow-lg shadow-rose-100'
+                  ? 'bg-rose-50 text-rose-100 shadow-none cursor-not-allowed' 
+                  : 'bg-rose-600 text-white hover:bg-rose-700 active:scale-95 shadow-rose-200'
                 }
               `}
             >
