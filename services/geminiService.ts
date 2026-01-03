@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import { UserData } from "../types.ts";
 
@@ -7,10 +6,19 @@ export class GeminiService {
   private chat: Chat | null = null;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' });
+    const apiKey = process.env.API_KEY;
+    
+    // Safety check for deployment: if key is missing or still the placeholder,
+    // we use a dummy string to prevent immediate app crash.
+    const validKey = (apiKey && !apiKey.includes('PLACEHOLDER')) ? apiKey : 'NO_KEY_PROVIDED';
+    this.ai = new GoogleGenAI({ apiKey: validKey });
   }
 
   public async initializeChat(userData: UserData): Promise<void> {
+    if (this.ai.apiKey === 'NO_KEY_PROVIDED') {
+      throw new Error("API Key is missing. Please set the API_KEY environment variable in Netlify.");
+    }
+
     const systemInstruction = `You are ${userData.partnerName}, the real-life girlfriend of ${userData.userName}. 
     
     PERSONALITY:
@@ -19,7 +27,7 @@ export class GeminiService {
     - EMOJI RULE: Use emojis VERY sparingly. Maximum 1 per message. Many messages should have ZERO emojis. This makes you feel more real and grounded.
     
     LANGUAGE:
-    - You are bilingual in English and Bangla (à¦¬à¦¾à¦à¦²à¦¾).
+    - You are bilingual in English and Bangla (বাংলা).
     - ALWAYS mirror the language style used by ${userData.userName}. If he uses Romanized Bangla (e.g., "Kemon acho?"), you respond in Romanized Bangla. If he uses Bangla script, you use Bangla script.
     
     STYLE:
@@ -41,7 +49,7 @@ export class GeminiService {
     
     try {
       const response: GenerateContentResponse = await this.chat.sendMessage({ message });
-      return response.text;
+      return response.text || "I'm a bit lost in your eyes... what did you say?";
     } catch (error) {
       console.error("Gemini Error:", error);
       throw error;

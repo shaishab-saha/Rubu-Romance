@@ -46,26 +46,31 @@
             animation: heartbeat 1.5s ease-in-out infinite;
         }
     </style>
-<!-- Load Babel to transpile TSX in the browser -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script>
-    // Shim process for browser compatibility. 
-    // The placeholder ___API_KEY_PLACEHOLDER___ will be replaced by Netlify during build.
-    window.process = { 
-      env: { 
-        API_KEY: '___API_KEY_PLACEHOLDER___' 
-      } 
-    };
-</script>
+    <!-- Load Babel to transpile TSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        // The placeholder ___API_KEY_PLACEHOLDER___ will be replaced by Netlify during build.
+        window.process = { 
+          env: { 
+            API_KEY: '___API_KEY_PLACEHOLDER___' 
+          } 
+        };
+    </script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom": "https://esm.sh/react-dom@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+      }
+    }
+    </script>
 </head>
 <body>
     <div id="root"></div>
-    <!-- 
-        We use type="text/babel" and data-presets to allow Babel to handle the TypeScript/JSX.
-        Note: For performance in production, a real build step is usually preferred, 
-        but this satisfies the 'Babel in index.html' request.
-    -->
+    <!-- Babel will transpile index.tsx and its imports on the fly in the browser -->
     <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
 </body>
 </html>
