@@ -1,16 +1,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { UserData, Message, ChatState } from '../types';
-import MessageBubble from './MessageBubble';
-import { geminiService } from '../services/geminiService';
+import { UserData, Message, ChatState } from '../types.ts';
+import MessageBubble from './MessageBubble.tsx';
+import { geminiService } from '../services/geminiService.ts';
 
 interface ChatInterfaceProps {
   userData: UserData;
 }
 
 const ROMANTIC_EMOJIS = [
-  '❤️', '💖', '✨', '🥺', '🙈', '🌹', '🦋', '💍', 
-  '🥰', '😘', '💕', '🧸', '💌', '🌸', '💫', '🫂'
+  '❤️', '💖', '✨', '🥺', '🙈', '🌹', '🦋', '🥰', '😘', '💕', '🧸', '💌', '🌸', '💫', '🫂'
 ];
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
@@ -32,6 +31,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
     const init = async () => {
       try {
         await geminiService.initializeChat(userData);
+        // Start with an empty message array as requested (no response at beginning)
         setChatState(prev => ({
           ...prev,
           messages: [],
@@ -41,7 +41,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         setChatState(prev => ({ 
           ...prev, 
           isLoading: false, 
-          error: "I can't seem to reach you... Try refreshing?" 
+          error: "Our connection is fluttering... Try refreshing?" 
         }));
       }
     };
@@ -88,7 +88,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
       setChatState(prev => ({
         ...prev,
         isLoading: false,
-        error: "Sorry love, I lost my connection for a moment. Can you repeat that?"
+        error: "I missed that, love. Can you repeat it?"
       }));
     }
   };
@@ -100,7 +100,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
 
   return (
     <div className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto glass-effect shadow-2xl relative border-x border-rose-100/50">
-      {/* Header */}
       <header className="p-4 bg-white border-b border-rose-100 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-full border-2 border-rose-500 overflow-hidden bg-rose-50 flex items-center justify-center shadow-inner">
@@ -114,7 +113,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
             <h1 className="font-serif font-bold text-gray-900 text-lg sm:text-xl leading-tight">{userData.partnerName}</h1>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Listening...</span>
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Active now</span>
             </div>
           </div>
         </div>
@@ -128,7 +127,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         </div>
       </header>
 
-      {/* Messages */}
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2 relative scroll-smooth bg-rose-50/5">
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03] overflow-hidden">
           <i className="fas fa-heart text-[300px] text-rose-600"></i>
@@ -141,7 +139,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
             </div>
             <div>
               <p className="text-gray-400 text-sm font-medium">Say something to {userData.partnerName}...</p>
-              <p className="text-rose-300 text-[11px] uppercase tracking-widest mt-1">Her heart is waiting</p>
+              <p className="text-rose-300 text-[11px] uppercase tracking-widest mt-1">She's all yours</p>
             </div>
           </div>
         )}
@@ -156,7 +154,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
               <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse"></div>
               <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse [animation-delay:0.2s]"></div>
               <div className="w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse [animation-delay:0.4s]"></div>
-              <span className="text-[10px] text-rose-300 ml-2 font-bold uppercase tracking-tighter">Thinking...</span>
             </div>
           </div>
         )}
@@ -170,7 +167,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         <div ref={messagesEndRef} className="h-4" />
       </main>
 
-      {/* Emoji Quick Select */}
       {showEmojiPicker && (
         <div className="absolute bottom-[85px] left-4 right-4 bg-white/95 backdrop-blur-md border border-rose-100 rounded-[2rem] p-4 shadow-2xl z-30 animate-in slide-in-from-bottom-5 duration-300">
           <div className="grid grid-cols-8 gap-1">
@@ -188,7 +184,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userData }) => {
         </div>
       )}
 
-      {/* Input */}
       <footer className="p-3 sm:p-5 bg-white border-t border-rose-100 z-20">
         <form onSubmit={handleSend} className="flex flex-col gap-2">
           <div className="flex items-center gap-2 sm:gap-3">

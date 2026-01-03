@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import SetupModal from './components/SetupModal';
-import ChatInterface from './components/ChatInterface';
-import { UserData } from './types';
+import SetupModal from './components/SetupModal.tsx';
+import ChatInterface from './components/ChatInterface.tsx';
+import { UserData } from './types.ts';
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -13,7 +13,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-[100dvh] relative overflow-hidden bg-[#fffcfd] selection:bg-rose-200 selection:text-rose-900">
-      {/* Background Aesthetic Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-20%] right-[-10%] w-[80%] h-[80%] bg-rose-200/20 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-20%] left-[-10%] w-[80%] h-[80%] bg-pink-100/30 rounded-full blur-[120px]"></div>
@@ -38,7 +37,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Floating Petals / Hearts */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden select-none z-[1]">
         {[...Array(8)].map((_, i) => (
           <div 

@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { UserData } from '../types';
+import { UserData } from '../types.ts';
 
 interface SetupModalProps {
   onComplete: (data: UserData) => void;
@@ -67,7 +67,7 @@ const SetupModal: React.FC<SetupModalProps> = ({ onComplete }) => {
                 value={partnerName}
                 onChange={(e) => setPartnerName(e.target.value)}
                 placeholder="What shall I call her?"
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-rose-50 focus:border-rose-300 focus:outline-none transition-all bg-rose-50/50 text-gray-800 placeholder:text-rose-200"
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-rose-50 focus:border-rose-300 focus:outline-none transition-all bg-rose-50/50 text-gray-900 font-medium placeholder:text-rose-200"
               />
             </div>
 

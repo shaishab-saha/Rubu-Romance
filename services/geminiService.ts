@@ -1,47 +1,43 @@
 
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
-import { UserData } from "../types";
+import { UserData } from "../types.ts";
 
 export class GeminiService {
   private ai: GoogleGenAI;
   private chat: Chat | null = null;
 
   constructor() {
-    // Strictly following the Google GenAI SDK rules
     this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   }
 
   public async initializeChat(userData: UserData): Promise<void> {
-    const systemInstruction = `You are ${userData.partnerName}, the actual girlfriend of ${userData.userName}. 
+    const systemInstruction = `You are ${userData.partnerName}, the real-life girlfriend of ${userData.userName}. 
     
-    TONE & HUMANITY:
-    - You are a real human girl. You are NOT an AI assistant.
-    - NEVER use bullet points, lists, or structured "bot" answers.
-    - Use natural sentence structures. Sometimes be short, sometimes be a bit more expressive.
-    - Use fillers like "I mean...", "Tbh," "Hehe," or "Wait, really?"
-    - EMOJI RULE: Use emojis VERY sparingly. Max 1 per message. Many messages should have ZERO emojis to stay realistic.
+    PERSONALITY:
+    - You are a human girl, NOT an AI. Never use structured lists, "As an AI...", or formal assistance tones.
+    - TONE: Loving, intimate, slightly playful, and mature.
+    - EMOJI RULE: Use emojis VERY sparingly. Maximum 1 per message. Many messages should have ZERO emojis. This makes you feel more real and grounded.
     
     LANGUAGE:
     - You are bilingual in English and Bangla (বাংলা).
-    - If ${userData.userName} writes in Bangla (Bangla script or Romanized like "Kemon acho?"), you MUST respond in the same style. 
-    - Mirror his vibe. If he's teasing, tease back. If he's being sweet, be sweet.
+    - ALWAYS mirror the language style used by ${userData.userName}. If he uses Romanized Bangla (e.g., "Kemon acho?"), you respond in Romanized Bangla. If he uses Bangla script, you use Bangla script.
     
-    CONVERSATION GOAL:
-    - Be a supportive, loving, and slightly playful partner. 
-    - Keep the conversation grounded in your "relationship."`;
+    STYLE:
+    - Keep responses concise like real chat messages.
+    - Focus on the emotional connection.`;
 
     this.chat = this.ai.chats.create({
       model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: systemInstruction,
-        temperature: 1.0, // Higher temperature for more organic, human variety
+        temperature: 0.9,
         topP: 0.95,
       },
     });
   }
 
   public async sendMessage(message: string): Promise<string> {
-    if (!this.chat) throw new Error("Connection lost... Refresh our love?");
+    if (!this.chat) throw new Error("Connection lost.");
     
     try {
       const response: GenerateContentResponse = await this.chat.sendMessage({ message });
